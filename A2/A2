@@ -1,0 +1,157 @@
+import pandas as pd
+import ssl
+import time
+import sys
+
+# Set SSL context for downloading the data
+ssl._create_default_https_context = ssl._create_unverified_context
+
+# Load sales data
+url = "https://drive.google.com/uc?export=download&id=1Fv_vhoN4sTrUaozFPfzr0NCyHJLIeXEA"
+
+# Function to load CSV file
+def load_csv(file_path):
+    try:
+        print(f"Loading sales data from: {file_path}")
+        start_time = time.time()
+        sales_data = pd.read_csv(file_path, on_bad_lines="skip")
+        load_time = time.time() - start_time
+        print(f"Sales data loaded in {load_time:.2f} seconds")
+        print(f"Number of rows: {len(sales_data)}")
+        print(f"Available columns: {list(sales_data.columns)}")
+
+        # Replace missing data with zeros
+        sales_data.fillna(0, inplace=True)
+
+        # Required columns check
+        required_columns = ['quantity', 'order_date', 'unit_price', 'sales_region', 'employee_id']
+        missing_columns = [col for col in required_columns if col not in sales_data.columns]
+        if missing_columns:
+            print(f"Warning: Missing columns - {missing_columns}. Some analytics may not work.")
+
+        # Parse the order_date field into a standard representation
+        sales_data['order_date'] = pd.to_datetime(sales_data['order_date'], errors='coerce')
+        return sales_data
+    except Exception as e:
+        print(f"Error: Could not load the CSV file. {e}")
+        sys.exit(1)
+
+# Function to get user selection
+
+def get_user_selection(options, prompt):
+    print(prompt)
+    for i, option in enumerate(options):
+        print(f"{i + 1}. {option}")
+    try:
+        choice = input("Enter the number(s) of your choice(s), separated by commas: ").strip()
+        if not choice:
+            return []
+        selected = [options[int(i) - 1] for i in choice.split(',')]
+        return selected
+    except (ValueError, IndexError):
+        print("Invalid input. Please try again.")
+        return get_user_selection(options, prompt)
+
+# Function to display a custom pivot table
+def generate_custom_pivot_table(data):
+    print("\nGenerating Custom Pivot Table")
+    row_options = list(data.columns)
+    rows = get_user_selection(row_options, "Select rows:")
+    col_options = [col for col in row_options if col not in rows]
+    cols = get_user_selection(col_options, "Select columns (optional):")
+    value_options = list(data.select_dtypes(include=['number']).columns)
+    values = get_user_selection(value_options, "Select values:")
+    agg_options = ['sum', 'mean', 'count']
+    agg_func = get_user_selection(agg_options, "Select aggregation function:")[0]
+
+    pivot_table = pd.pivot_table(
+        data,
+        index=rows,
+        columns=cols if cols else None,
+        values=values,
+        aggfunc=agg_func
+    )
+    print("\nCustom Pivot Table:")
+    print(pivot_table)
+
+    export = input("Do you want to export the result to an Excel file? (yes/no): ").strip().lower()
+    if export == 'yes':
+        filename = input("Enter filename (e.g., 'pivot_table.xlsx'): ").strip()
+        pivot_table.to_excel(filename)
+        print(f"Pivot table exported to {filename}")
+
+# Function to show the first n rows of data
+def display_rows(data):
+    while True:
+        num_rows = len(data)
+        print("\nEnter number of rows to display:")
+        print(f"- Enter a number between 1 and {num_rows}")
+        print("- To see all rows enter 'all'")
+        print("- To skip, press Enter")
+        user_choice = input("Your choice: ").strip().lower()
+
+        if user_choice == '':
+            print("Skipping preview")
+            break
+        elif user_choice == 'all':
+            print(data)
+            break
+        elif user_choice.isdigit() and 1 <= int(user_choice) <= num_rows:
+            print(data.head(int(user_choice)))
+            break
+        else:
+            print("Invalid input. Please re-enter")
+
+# Predefined analytical task functions
+def total_sales_by_region_order_type(data):
+    pivot_table = pd.pivot_table(data, index="sales_region", columns="order_type", values="unit_price", aggfunc="sum")
+    print("\nTotal Sales by Region and Order Type:")
+    print(pivot_table)
+
+def unique_employees_by_region(data):
+    pivot_table = pd.pivot_table(data, index="sales_region", values="employee_id", aggfunc=pd.Series.nunique)
+    print("\nNumber of Unique Employees by Region:")
+    print(pivot_table)
+
+# Menu to display options
+def display_menu(data):
+    menu_options = [
+        ("Show the first n rows of sales data", display_rows),
+        ("Total sales by region and order_type", total_sales_by_region_order_type),
+        ("Number of unique employees by region", unique_employees_by_region),
+        ("Generate a custom pivot table", generate_custom_pivot_table),
+        ("Exit the program", exit_program)
+    ]
+
+    while True:
+        print("\n--- Sales Data Dashboard ---")
+        for index, (description, _) in enumerate(menu_options):
+            print(f"{index + 1}: {description}")
+
+        num_choices = len(menu_options)
+        try:
+            choice = int(input(f"Select an option between 1 and {num_choices}: "))
+            if 1 <= choice <= num_choices:
+                action = menu_options[choice - 1][1]
+                action(data)
+            else:
+                print("Invalid input. Please re-enter.")
+        except ValueError:
+            print("Invalid input. Please enter a number.")
+
+# Function to cleanly exit the program
+def exit_program(data):
+    sys.exit(0)
+
+# Load the CSV data
+sales_data = load_csv(url)
+
+# Main loop for user interaction
+def main():
+    if sales_data is not None:
+        display_menu(sales_data)
+    else:
+        print(f"Failed to load the CSV file {url}")
+
+if __name__ == "__main__":
+    main()
