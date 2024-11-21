@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <title>Welcome Back</title>
 </head>
 <body>
@@ -12,6 +13,7 @@
             <li>Score: {{ score }}</li>
         {% endfor %}
     </ul>
-    <a href="{{ url_for('home') }}">Start a New Quiz</a>
+    <a href="{{ url_for('restart_quiz') }}">Start a New Quiz</a>
 </body>
 </html>
+

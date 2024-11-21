@@ -42,12 +42,12 @@ def login():
         return response
     return render_template('login.html')
 
-# Route to the home page, which shows the quiz
+# Route to the home page, which shows the quiz or a welcome back page
 @app.route('/')
 def home():
     # Check if the user has visited before using cookies
     username = request.cookies.get('username')
-    if username:
+    if username and 'restart' not in session:
         session['username'] = username
         # Load user's score history if it exists
         score_history = session.get('score_history', [])
@@ -57,30 +57,37 @@ def home():
     if 'username' not in session:
         return redirect(url_for('login'))
 
-    # Set up quiz for first-time users
+    # Set up quiz for first-time users or users restarting the quiz
     questions = load_questions()
-    random.shuffle(questions)
+    random.shuffle(questions)  # Randomize the questions list here
     session['questions'] = questions
     session['current_question'] = 0
     session['score'] = 0
+    # Remove 'restart' flag if it exists
+    session.pop('restart', None)
 
-    return render_template('index.html', question=questions[0])
+    return render_template('index.html', question=randomize_options(questions[0]))
 
-# Route to handle answer submissions
+# Route to handle answer submissions and provide real-time feedback
 @app.route('/answer', methods=['POST'])
 def answer():
     user_answer = request.form['answer']
     question_index = session.get('current_question', 0)
     questions = session.get('questions', [])
 
+    feedback = ""
     if question_index < len(questions):
         correct_answer = questions[question_index]['correct']
         if user_answer == correct_answer:
+            feedback = "Correct!"
             session['score'] += 1
+        else:
+            feedback = f"Incorrect! The correct answer was: {correct_answer}"
 
         session['current_question'] = question_index + 1
         if session['current_question'] < len(questions):
-            return render_template('index.html', question=questions[session['current_question']])
+            next_question = randomize_options(questions[session['current_question']])
+            return render_template('index.html', question=next_question, feedback=feedback)
         else:
             return redirect(url_for('result'))
 
@@ -103,6 +110,19 @@ def result():
 
     return render_template('result.html', score=score, leaderboard=leaderboard)
 
+# Utility function to randomize the options of a question
+def randomize_options(question):
+    options = question['options']
+    random.shuffle(options)
+    question['options'] = options
+    return question
+
+# Route to clear session and restart the quiz
+@app.route('/restart-quiz')
+def restart_quiz():
+    session['restart'] = True
+    return redirect(url_for('home'))
+
 # Route to clear session and logout user
 @app.route('/clear-session')
 def clear_session():
@@ -113,3 +133,6 @@ def clear_session():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+
+
