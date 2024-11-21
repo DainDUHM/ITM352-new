@@ -1,0 +1,78 @@
+[
+    {
+        "text": "What is the capital of France?",
+        "options": ["Paris", "Berlin", "Madrid", "Rome"],
+        "correct": "Paris"
+    },
+    {
+        "text": "Who painted the Mona Lisa?",
+        "options": ["Leonardo da Vinci", "Vincent van Gogh", "Pablo Picasso", "Claude Monet"],
+        "correct": "Leonardo da Vinci"
+    },
+    {
+        "text": "What is the largest planet in our solar system?",
+        "options": ["Jupiter", "Saturn", "Neptune", "Mars"],
+        "correct": "Jupiter"
+    },
+    {
+        "text": "Which country is home to the kangaroo?",
+        "options": ["Australia", "India", "South Africa", "Brazil"],
+        "correct": "Australia"
+    },
+    {
+        "text": "How many continents are there?",
+        "options": ["7", "5", "6", "8"],
+        "correct": "7"
+    },
+    {
+        "text": "What is the boiling point of water at sea level in Celsius?",
+        "options": ["100", "90", "80", "70"],
+        "correct": "100"
+    },
+    {
+        "text": "Which element has the chemical symbol 'He'?",
+        "options": ["Helium", "Hydrogen", "Iron", "Neon"],
+        "correct": "Helium"
+    },
+    {
+        "text": "What is the smallest country in the world by area?",
+        "options": ["Vatican City", "Monaco", "San Marino", "Liechtenstein"],
+        "correct": "Vatican City"
+    },
+    {
+        "text": "Who wrote the play 'Romeo and Juliet'?",
+        "options": ["William Shakespeare", "Charles Dickens", "Jane Austen", "Mark Twain"],
+        "correct": "William Shakespeare"
+    },
+    {
+        "text": "Which planet is closest to the sun?",
+        "options": ["Mercury", "Venus", "Earth", "Mars"],
+        "correct": "Mercury"
+    },
+    {
+        "text": "What is the hardest natural substance on Earth?",
+        "options": ["Diamond", "Gold", "Iron", "Graphite"],
+        "correct": "Diamond"
+    },
+    {
+        "text": "Which country hosted the 2016 Summer Olympics?",
+        "options": ["Brazil", "China", "Russia", "United Kingdom"],
+        "correct": "Brazil"
+    },
+    {
+        "text": "What is the name of the longest river in South America?",
+        "options": ["Amazon River", "Nile River", "Yangtze River", "Mississippi River"],
+        "correct": "Amazon River"
+    },
+    {
+        "text": "What is the capital of Japan?",
+        "options": ["Tokyo", "Kyoto", "Osaka", "Nagoya"],
+        "correct": "Tokyo"
+    },
+    {
+        "text": "Which scientist is known for their theory of gravity?",
+        "options": ["Isaac Newton", "Albert Einstein", "Galileo Galilei", "Marie Curie"],
+        "correct": "Isaac Newton"
+    }
+]
+

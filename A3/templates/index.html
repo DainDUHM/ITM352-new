@@ -3,20 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <title>Quiz Game</title>
+    <title>Login</title>
 </head>
 <body>
-    <h1>Welcome, {{ session['username'] }}!</h1>
+    <h1>Welcome to the Quiz Game</h1>
     <form method="post" action="{{ url_for('answer') }}">
         <h2>{{ question['text'] }}</h2>
         <ul>
             {% for option in question['options'] %}
                 <li>
-                    <input type="radio" name="answer" value="{{ option }}"> {{ option }}
+                    <input type="radio" name="answer" value="{{ option }}" required> {{ option }}
                 </li>
             {% endfor %}
         </ul>
         <button type="submit">Submit Answer</button>
     </form>
+    
 </body>
 </html>

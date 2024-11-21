@@ -6,10 +6,11 @@
     <title>Login</title>
 </head>
 <body>
-    <h1>Enter Your Name</h1>
-    <form method="post">
+    <h1>Welcome to the Quiz Game</h1>
+    <form method="post" action="{{ url_for('login') }}">
         <input type="text" name="username" placeholder="Enter your name" required>
         <button type="submit">Start Quiz</button>
     </form>
 </body>
 </html>
+
