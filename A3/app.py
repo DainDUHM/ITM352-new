@@ -59,7 +59,7 @@ def home():
 
     # Set up quiz for first-time users or users restarting the quiz
     questions = load_questions()
-    random.shuffle(questions)  # Randomize the questions list here
+    random.shuffle(questions)  
     session['questions'] = questions
     session['current_question'] = 0
     session['score'] = 0
