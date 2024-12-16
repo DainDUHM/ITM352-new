@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Transactions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        h1 {
+            color: #28a745;
+        }
+        .categories {
+            margin-top: 20px;
+            text-align: left;
+            width: 100%;
+            max-width: 600px;
+        }
+        .categories table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .categories th, .categories td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        .categories th {
+            background-color: #007BFF;
+            color: white;
+        }
+        img {
+            margin-top: 20px;
+            max-width: 100%;
+        }
+        a {
+            margin-top: 20px;
+            color: #007BFF;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Expenses by Category</h1>
+    {% if categories %}
+        <div class="categories">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Total Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for category, amount in categories.items() %}
+                        <tr>
+                            <td>{{ category }}</td>
+                            <td>${{ amount }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <img src="data:image/png;base64,{{ chart_data }}" alt="Expenses Pie Chart">
+    {% else %}
+        <p>No transactions to display.</p>
+    {% endif %}
+    <a href="{{ url_for('home') }}">Back to Home</a>
+</body>
+</html>
+
+
+

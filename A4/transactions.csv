@@ -1,0 +1,9 @@
+username,date,amount,category,description
+test_user,2024-12-15,-50,Food,Lunch
+test_user,2024-12-16,-30,Transportation,Bus ticket
+test_user,2024-12-17,-100,Clothing,Shirt
+test_user,2024-12-18,-20,Entertainment,Movie
+test_user,2024-12-19,500,Income,Salary
+
+
+
